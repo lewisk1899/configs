@@ -30,6 +30,10 @@ Plug 'neovim/nvim-lspconfig'
 " Copilot 
 Plug 'github/copilot.vim'
 
+" Nice status line
+Plug 'nvim-lualine/lualine.nvim'
+Plug 'nvim-tree/nvim-web-devicons' 
+
 " Colorscheme
 Plug 'catppuccin/nvim'
 
@@ -134,13 +138,31 @@ lspconfig.cssls.setup{}
 lspconfig.html.setup{}
 EOF
 
+lua << EOF
+require('lualine').setup {
+  options = {
+    theme = 'catppuccin',  -- Matches your preferred purplish theme
+    icons_enabled = true,
+    component_separators = { left = '', right = ''},
+    section_separators = { left = '', right = ''},
+  },
+  sections = {
+    lualine_a = {'mode'},
+    lualine_b = {'branch', 'diff', 'diagnostics'},
+    lualine_c = {'filename'},
+    lualine_x = {'encoding', 'fileformat', 'filetype'},
+    lualine_y = {'progress'},
+    lualine_z = {'location'}
+  }
+}
+EOF
+
 " Enable GitHub Copilot
 let g:copilot_no_tab_map = v:true  " Disable Copilot's default Tab mapping
 
 " Use <C-J> and <C-K> for accepting or cycling through suggestions
 inoremap <silent><expr> <C-J> copilot#Accept("\<CR>")
 inoremap <silent><expr> <C-K> copilot#CycleSuggestions()
-
 
 " Enable autocompletion with nvim-cmp
 set completeopt=menuone,noinsert,noselect
